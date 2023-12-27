@@ -81,21 +81,16 @@ export async function generateEmailBody(
 }
 
 const transporter = nodemailer.createTransport({
-  service:'yahoo',
+  service:'gmail',
   auth: {
-    user: 'informativosampaio@yahoo.com',
+    user: process.env.EMAIL_USERNAME,
     pass: process.env.EMAIL_PASSWORD,
-  },
-  secure: true,
-  port: 465,
-  tls: {
-    rejectUnauthorized: false,
   },
 })
 
 export const sendEmail = async (emailContent: EmailContent, sendTo: string[]) => {
   const mailOptions = {
-    from: 'informativosampaio@yahoo.com',
+    from: process.env.EMAIL_USERNAME,
     to: sendTo,
     html: emailContent.body,
     subject: emailContent.subject,
