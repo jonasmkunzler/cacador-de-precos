@@ -12,11 +12,12 @@
     "@headlessui/react": "^1.7.17",
     "axios": "^1.5.1",
     "cheerio": "^1.0.0-rc.12",
+    "chrome-aws-lambda": "^10.1.0",
     "install-chrome-dependencies": "^1.1.2",
     "mongoose": "^8.0.2",
     "next": "latest",
     "nodemailer": "^6.9.5",
-    "puppeteer": "^21.5.2",
+    "puppeteer-core": "^21.6.1",
     "react": "latest",
     "react-dom": "latest",
     "react-responsive-carousel": "^3.2.23",
@@ -29,6 +30,7 @@
     "@types/react-dom": "latest",
     "autoprefixer": "latest",
     "postcss": "latest",
+    "puppeteer": "^21.6.1",
     "tailwindcss": "latest",
     "typescript": "latest"
   }

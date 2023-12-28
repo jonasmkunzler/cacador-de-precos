@@ -32,7 +32,6 @@ export async function GET(request: Request) {
             break;
           case 'Terabyte':
             scrapedProduct = await scrapeTeraByteProduct(currentProduct.url);
-            console.log(scrapedProduct);
             break;
           case 'Pichau':
             scrapedProduct = await scrapePichauProduct(currentProduct.url);
