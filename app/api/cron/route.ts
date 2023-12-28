@@ -6,7 +6,7 @@ import Product from "@/lib/models/product.model";
 import { scrapeAmazonProduct, scrapeKabumProduct, scrapePichauProduct, scrapeTeraByteProduct } from "@/lib/scraper";
 import { generateEmailBody, sendEmail } from "@/lib/nodemailer";
 
-export const maxDuration = 300; // This function can run for a maximum of 300 seconds
+export const maxDuration = 10; // For the hobby plan Vercel only allows 1 to 10 seconds.
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -76,7 +76,7 @@ export async function GET(request: Request) {
               },
             },
             $inc: {
-              reviewsCount: 1, // Incrementa o reviewsCount por 1
+              reviewsCount: 1, // Incrementa o reviewsCount mais 1
             },          
           },
           { new: true } // Retorna o novo documento após a atualização
