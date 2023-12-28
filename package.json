@@ -16,13 +16,13 @@
     "mongoose": "^8.0.2",
     "next": "latest",
     "nodemailer": "^6.9.5",
-    "puppeteer": "^21.6.1",
     "puppeteer-core": "^21.6.1",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "react": "latest",
     "react-dom": "latest",
     "react-responsive-carousel": "^3.2.23",
+    "sharp": "^0.33.1",
     "supports-color": "^8.1.1"
   },
   "devDependencies": {
@@ -32,6 +32,7 @@
     "@types/react-dom": "latest",
     "autoprefixer": "latest",
     "postcss": "latest",
+    "puppeteer": "^21.6.1",
     "tailwindcss": "latest",
     "typescript": "latest"
   }
