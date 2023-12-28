@@ -7,8 +7,8 @@ import { scrapeAmazonProduct, scrapeKabumProduct, scrapePichauProduct, scrapeTer
 import { generateEmailBody, sendEmail } from "@/lib/nodemailer";
 
 export const maxDuration = 10; // For the hobby plan Vercel only allows 1 to 10 seconds.
-//export const dynamic = "force-dynamic";
-//export const revalidate = 0;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET(request: Request) {
   try {
