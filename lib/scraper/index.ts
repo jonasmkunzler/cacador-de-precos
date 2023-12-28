@@ -3,8 +3,28 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { extractDescription } from '../utils';
-import puppeteer, { Browser } from 'puppeteer';
+import { Browser } from 'puppeteer';
 import { NextDataKabum, NextDataPichau, ProductType } from '@/types';
+
+let puppeteer: any;
+let chrome: any;
+
+if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  import("chrome-aws-lambda").then((chrome) => {
+    import("puppeteer-core").then((p) => {
+      puppeteer = p;
+      chrome = chrome;
+      // Use puppeteer após a resolução da promise, dentro deste bloco, para garantir que foi carregado corretamente.
+    });
+  });
+} else {
+  import("puppeteer").then((p) => {
+    puppeteer = p;
+    // Use puppeteer normalmente após essa importação.
+  });
+}
+
+
 
 export async function scrapeAmazonProduct(url: string) {
   if(!url) return;
@@ -63,8 +83,20 @@ export async function scrapeAmazonProduct(url: string) {
 
 export async function scrapeKabumProduct(url:string) {
   if(!url) return;
+
+  let options = {};
+
+  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    options = {
+      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+      defaultViewport: chrome.defaultViewport,
+      executablePath: await chrome.executablePath,
+      headless: 'new',
+      ignoreHTTPSErrors: true,
+    };
+  }
   
-  const browser:Browser = await puppeteer.launch({ headless: 'new' });
+  const browser:Browser = await puppeteer.launch(options);
   const page = await browser.newPage();
   
   try {
