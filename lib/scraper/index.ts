@@ -3,7 +3,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { extractDescription } from '../utils';
-import  { Browser, executablePath } from 'puppeteer';
+//import  { Browser, executablePath } from 'puppeteer';
 import { NextDataKabum, NextDataPichau, ProductType } from '@/types';
 
 import puppeteer from 'puppeteer-extra';
@@ -72,7 +72,7 @@ export async function scrapeAmazonProduct(url: string) {
 export async function scrapeKabumProduct(url: string) {
   if (!url) return;
 
-  const browser:Browser = await puppeteer.launch({ headless: 'new', executablePath: executablePath() });
+  const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
 
   try {
@@ -177,7 +177,7 @@ export async function scrapeKabumProduct(url: string) {
 export async function scrapeTeraByteProduct (url:string) {
   if(!url) return;
   
-  const browser:Browser  = await puppeteer.launch({ headless: false });
+  const browser  = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   try {
@@ -237,7 +237,7 @@ export async function scrapeTeraByteProduct (url:string) {
 export async function scrapePichauProduct (url:string) {
   if(!url) return;
  
-  const browser:Browser  = await puppeteer.launch({ headless: false });
+  const browser  = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   try {
