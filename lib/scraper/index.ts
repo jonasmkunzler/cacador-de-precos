@@ -9,7 +9,7 @@ import { NextDataKabum, NextDataPichau, ProductType } from '@/types';
 let puppeteer: any;
 let chrome: any;
 
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+if (process.env.VERCEL_LAMBDA_FUNCTION_VERSION) {
   import("chrome-aws-lambda").then((chrome) => {
     import("puppeteer-core").then((p) => {
       puppeteer = p;
@@ -86,7 +86,7 @@ export async function scrapeKabumProduct(url:string) {
 
   let options = {};
 
-  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  if (process.env.VERCEL_LAMBDA_FUNCTION_VERSION) {
     options = {
       args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
       defaultViewport: chrome.defaultViewport,
