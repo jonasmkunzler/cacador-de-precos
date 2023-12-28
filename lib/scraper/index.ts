@@ -6,73 +6,26 @@ import { extractDescription } from '../utils';
 //import  { Browser, executablePath } from 'puppeteer';
 import { NextDataKabum, NextDataPichau, ProductType } from '@/types';
 
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+//import puppeteer from 'puppeteer-extra';
 
-puppeteer.use(StealthPlugin());
-
-export async function scrapeAmazonProduct(url: string) {
-  if(!url) return;
-
-  try {
-    const response = await axios.get(url);
-    const $ = cheerio.load(response.data);
-
-    const title = $('#productTitle').text().trim();
-    
-    
-    const curPriceText = $('.a-price span.a-offscreen').first().text().trim();
-    const currentPrice = parseFloat(curPriceText.replace(/[^0-9,.]/g, '').replace(',', '.'));
-    
-    const oriPriceTexte = $('.basisPrice .a-offscreen').first().text().trim();
-    const originalPrice = parseFloat(oriPriceTexte.replace(/[^0-9,.]/g, '').replace(',', '.'));
-
-    const outOfStock = $('#availability span').text().trim().toLowerCase() === 'currently unavailable';
-
-    const images = 
-      $('#imgBlkFront').attr('data-a-dynamic-image') || 
-      $('#landingImage').attr('data-a-dynamic-image') ||
-      '/assets/icons/image-not-found.svg'
-
-    const imageUrls = Object.keys(JSON.parse(images));
-
-    const discountRate = $('.savingsPercentage').text().replace(/[-%]/g, "");
-
-    const description = extractDescription($)
-
-    // Construct data object with scraped information
-    const data = {
-      url,
-      currency: 'R$',
-      image: imageUrls[0] ?? '/assets/icons/image-not-found.svg',
-      title: title ?? 'Sem Titulo',
-      currentPrice: Number(currentPrice) || Number(originalPrice),
-      originalPrice: Number(originalPrice) || Number(currentPrice),
-      priceHistory: [],
-      discountRate: Number(discountRate),
-      category: 'Amazon',
-      reviewsCount:1,
-      stars: 4.5,
-      isOutOfStock: outOfStock,
-      description,
-      lowestPrice: Number(currentPrice) || Number(originalPrice),
-      highestPrice: Number(originalPrice) || Number(currentPrice),
-      averagePrice: Number(currentPrice) || Number(originalPrice),
-    }
-
-    return data;
-  } catch (error: any) {
-    console.log(error);
-  }
-}
+import stealthPlugin from 'puppeteer-extra-plugin-stealth';
+import chromium from '@sparticuz/chromium';
+import puppeteerExtra from 'puppeteer-extra';
 
 
 
+puppeteerExtra.use(stealthPlugin());
 
 export async function scrapeKabumProduct(url: string) {
   if (!url) return;
 
-  const browser = await puppeteer.launch({ headless: 'new' });
+  const browser = await puppeteerExtra.launch({ 
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true, 
+  });
   const page = await browser.newPage();
 
   try {
@@ -173,11 +126,66 @@ export async function scrapeKabumProduct(url: string) {
 }
 
 
+export async function scrapeAmazonProduct(url: string) {
+  if(!url) return;
+
+  try {
+    const response = await axios.get(url);
+    const $ = cheerio.load(response.data);
+
+    const title = $('#productTitle').text().trim();
+    
+    
+    const curPriceText = $('.a-price span.a-offscreen').first().text().trim();
+    const currentPrice = parseFloat(curPriceText.replace(/[^0-9,.]/g, '').replace(',', '.'));
+    
+    const oriPriceTexte = $('.basisPrice .a-offscreen').first().text().trim();
+    const originalPrice = parseFloat(oriPriceTexte.replace(/[^0-9,.]/g, '').replace(',', '.'));
+
+    const outOfStock = $('#availability span').text().trim().toLowerCase() === 'currently unavailable';
+
+    const images = 
+      $('#imgBlkFront').attr('data-a-dynamic-image') || 
+      $('#landingImage').attr('data-a-dynamic-image') ||
+      '/assets/icons/image-not-found.svg'
+
+    const imageUrls = Object.keys(JSON.parse(images));
+
+    const discountRate = $('.savingsPercentage').text().replace(/[-%]/g, "");
+
+    const description = extractDescription($)
+
+    // Construct data object with scraped information
+    const data = {
+      url,
+      currency: 'R$',
+      image: imageUrls[0] ?? '/assets/icons/image-not-found.svg',
+      title: title ?? 'Sem Titulo',
+      currentPrice: Number(currentPrice) || Number(originalPrice),
+      originalPrice: Number(originalPrice) || Number(currentPrice),
+      priceHistory: [],
+      discountRate: Number(discountRate),
+      category: 'Amazon',
+      reviewsCount:1,
+      stars: 4.5,
+      isOutOfStock: outOfStock,
+      description,
+      lowestPrice: Number(currentPrice) || Number(originalPrice),
+      highestPrice: Number(originalPrice) || Number(currentPrice),
+      averagePrice: Number(currentPrice) || Number(originalPrice),
+    }
+
+    return data;
+  } catch (error: any) {
+    console.log(error);
+  }
+}
+
 
 export async function scrapeTeraByteProduct (url:string) {
   if(!url) return;
   
-  const browser  = await puppeteer.launch({ headless: false });
+  const browser  = await puppeteerExtra.launch({ headless: false });
   const page = await browser.newPage();
 
   try {
@@ -237,7 +245,7 @@ export async function scrapeTeraByteProduct (url:string) {
 export async function scrapePichauProduct (url:string) {
   if(!url) return;
  
-  const browser  = await puppeteer.launch({ headless: false });
+  const browser  = await puppeteerExtra.launch({ headless: false });
   const page = await browser.newPage();
 
   try {
