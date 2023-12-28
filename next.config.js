@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ['mongoose']
+    serverComponentsExternalPackages: [
+      'mongoose',
+      'puppeteer-extra', 
+      'puppeteer-extra-plugin-stealth',
+    ], 
   },
   images: {
     remotePatterns: [

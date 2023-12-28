@@ -3,28 +3,13 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { extractDescription } from '../utils';
-import { Browser } from 'puppeteer';
+import  { Browser, executablePath } from 'puppeteer';
 import { NextDataKabum, NextDataPichau, ProductType } from '@/types';
 
-let puppeteer: any;
-let chrome: any;
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 
-if (process.env.VERCEL_LAMBDA_FUNCTION_VERSION) {
-  import("chrome-aws-lambda").then((chrome) => {
-    import("puppeteer-core").then((p) => {
-      puppeteer = p;
-      chrome = chrome;
-      // Use puppeteer após a resolução da promise, dentro deste bloco, para garantir que foi carregado corretamente.
-    });
-  });
-} else {
-  import("puppeteer").then((p) => {
-    puppeteer = p;
-    // Use puppeteer normalmente após essa importação.
-  });
-}
-
-
+puppeteer.use(StealthPlugin());
 
 export async function scrapeAmazonProduct(url: string) {
   if(!url) return;
@@ -81,71 +66,103 @@ export async function scrapeAmazonProduct(url: string) {
   }
 }
 
-export async function scrapeKabumProduct(url:string) {
-  if(!url) return;
 
-  let options = {};
 
-  if (process.env.VERCEL_LAMBDA_FUNCTION_VERSION) {
-    options = {
-      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
-      headless: 'new',
-      ignoreHTTPSErrors: true,
-    };
-  }
-  
-  const browser:Browser = await puppeteer.launch(options);
+
+export async function scrapeKabumProduct(url: string) {
+  if (!url) return;
+
+  const browser:Browser = await puppeteer.launch({ headless: 'new', executablePath: executablePath() });
   const page = await browser.newPage();
-  
+
   try {
     await page.goto(url);
-    
+
     await page.waitForSelector('#__NEXT_DATA__');
-    
-      const dataQuery = await page.evaluate(() => {
-        const dataElement = document.querySelector('#__NEXT_DATA__');
-        
-        const nextData:NextDataKabum = dataElement?JSON.parse(dataElement.textContent || '') : null;
 
-        return { nextData }
-    
-      })
-      const dataQueryScraping = await axios.get(url)
-      const $ = cheerio.load(dataQueryScraping.data);
-      
-      const outOfStock = $('span.sc-106738f2-3 + b').text().trim().toLowerCase() === 'em estoque'
-      console.log(outOfStock);
-      
+    const dataQuery = await page.evaluate(() => {
+      const dataElement = document.querySelector('#__NEXT_DATA__');
 
-    if (dataQuery){
-      console.log("DADOS KABUM:");
-      console.log(dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.name);
-      console.log(dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.photos);
-      console.log(dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.discountPrice);
+      const nextData: NextDataKabum = dataElement
+        ? JSON.parse(dataElement.textContent || '')
+        : null;
+
+      return { nextData };
+    });
+
+    const dataQueryScraping = await axios.get(url);
+    const $ = cheerio.load(dataQueryScraping.data);
+
+    const outOfStock = $(
+      'span.sc-106738f2-3 + b'
+    ).text()
+      .trim()
+      .toLowerCase() === 'em estoque';
+    console.log(outOfStock);
+
+    if (dataQuery) {
+      console.log('DADOS KABUM:');
+      console.log(
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .name
+      );
+      console.log(
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .photos
+      );
+      console.log(
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.discountPrice
+      );
     } else {
       console.log('Produto não encontrado');
     }
 
-    const data:ProductType = {
+    const data: ProductType = {
       url,
-      currency: 'R$', // Assuming the currency is in Brazilian Real
-      image: dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.photos[0] ?? '/assets/icons/image-not-found.svg', 
-      title: dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.name ?? 'Sem Titulo', 
-      currentPrice: dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.discountPrice || dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.price,
-      originalPrice:  dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.price || dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.discountPrice,
+      currency: 'R', // Assuming the currency is in Brazilian Real
+      image:
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .photos[0] ?? '/assets/icons/image-not-found.svg',
+      title:
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .name ?? 'Sem Titulo',
+      currentPrice:
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.discountPrice ||
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.price,
+      originalPrice:
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.price ||
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.discountPrice,
       priceHistory: [],
       discountRate: 0,
       category: 'Kabum',
       reviewsCount: 1,
       stars: 0,
       isOutOfStock: !outOfStock,
-      description: dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.description,
-      lowestPrice: dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.discountPrice || dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.price,
-      highestPrice: dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.price || dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.discountPrice,
-      averagePrice: dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.discountPrice || dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct.priceDetails.price,
+      description:
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .description,
+      lowestPrice:
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.discountPrice ||
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.price,
+      highestPrice:
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.price ||
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.discountPrice,
+      averagePrice:
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.discountPrice ||
+        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
+          .priceDetails.price,
     };
+
     return data;
   } catch (error) {
     console.log('Erro do Axios Kabum');
@@ -155,10 +172,12 @@ export async function scrapeKabumProduct(url:string) {
   }
 }
 
+
+
 export async function scrapeTeraByteProduct (url:string) {
   if(!url) return;
   
-  const browser:Browser = await puppeteer.launch({ headless: false });
+  const browser:Browser  = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   try {
@@ -214,10 +233,11 @@ export async function scrapeTeraByteProduct (url:string) {
   } 
 }
 
+
 export async function scrapePichauProduct (url:string) {
   if(!url) return;
  
-  const browser:Browser = await puppeteer.launch({ headless: false });
+  const browser:Browser  = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   try {
