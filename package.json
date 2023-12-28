@@ -12,6 +12,7 @@
     "@headlessui/react": "^1.7.17",
     "axios": "^1.5.1",
     "cheerio": "^1.0.0-rc.12",
+    "install-chrome-dependencies": "^1.1.2",
     "mongoose": "^8.0.2",
     "next": "latest",
     "nodemailer": "^6.9.5",
