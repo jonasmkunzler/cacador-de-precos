@@ -3,28 +3,19 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { extractDescription } from '../utils';
-//import  { Browser, executablePath } from 'puppeteer';
 import { NextDataKabum, NextDataPichau, ProductType } from '@/types';
 
-//import puppeteer from 'puppeteer-extra';
+import  { Browser, executablePath } from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 
-import stealthPlugin from 'puppeteer-extra-plugin-stealth';
-import chromium from '@sparticuz/chromium';
-import puppeteerExtra from 'puppeteer-extra';
-
-
-
-puppeteerExtra.use(stealthPlugin());
+puppeteer.use(StealthPlugin());
 
 export async function scrapeKabumProduct(url: string) {
   if (!url) return;
 
-  const browser = await puppeteerExtra.launch({ 
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless,
-    ignoreHTTPSErrors: true, 
+  const browser:Browser = await puppeteer.launch({ 
+    headless: 'new' , executablePath: executablePath() 
   });
   const page = await browser.newPage();
 
@@ -54,26 +45,14 @@ export async function scrapeKabumProduct(url: string) {
     console.log(outOfStock);
 
     if (dataQuery) {
-      console.log('DADOS KABUM:');
-      console.log(
-        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
-          .name
-      );
-      console.log(
-        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
-          .photos
-      );
-      console.log(
-        dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
-          .priceDetails.discountPrice
-      );
+      console.log('Dados da Kabum buscados com sucesso!');
     } else {
-      console.log('Produto não encontrado');
+      console.log('Dados não encontrados.');
     }
 
     const data: ProductType = {
       url,
-      currency: 'R', // Assuming the currency is in Brazilian Real
+      currency: 'R$',
       image:
         dataQuery.nextData.props.pageProps.initialZustandState.descriptionProduct
           .photos[0] ?? '/assets/icons/image-not-found.svg',
@@ -185,7 +164,9 @@ export async function scrapeAmazonProduct(url: string) {
 export async function scrapeTeraByteProduct (url:string) {
   if(!url) return;
   
-  const browser  = await puppeteerExtra.launch({ headless: false });
+  const browser:Browser  = await puppeteer.launch({  
+    headless: 'new', executablePath: executablePath() 
+  });
   const page = await browser.newPage();
 
   try {
@@ -245,7 +226,9 @@ export async function scrapeTeraByteProduct (url:string) {
 export async function scrapePichauProduct (url:string) {
   if(!url) return;
  
-  const browser  = await puppeteerExtra.launch({ headless: false });
+  const browser:Browser  = await puppeteer.launch({  
+    headless: 'new', executablePath: executablePath() 
+  });
   const page = await browser.newPage();
 
   try {
@@ -275,18 +258,18 @@ export async function scrapePichauProduct (url:string) {
 
     const data:ProductType = {
       url,
-      currency: 'R$', // Assuming the currency is in Brazilian Real
+      currency: 'R$', 
       image: dataQuery.imageSrcNotNull,
       title: dataQuery.nextData.props.pageProps.pageData.content.name ?? 'Sem Titulo',
       currentPrice: Number(dataQuery.nextData.props.pageProps.pageData.content.pichau_prices.avista) || Number (dataQuery.nextData.props.pageProps.pageData.content.pichau_prices.final_price),
       originalPrice:  Number (dataQuery.nextData.props.pageProps.pageData.content.pichau_prices.final_price) || Number(dataQuery.nextData.props.pageProps.pageData.content.pichau_prices.avista),
       priceHistory: [],
-      discountRate: 0, // No discount information available
-      category: 'Pichau', // Add the category information if available
-      reviewsCount: 1, // No review count available
-      stars: 0, // No star rating available
+      discountRate: 0, 
+      category: 'Pichau', 
+      reviewsCount: 1, 
+      stars: 0, 
       isOutOfStock: dataQuery.nextData.props.pageProps.pageData.content.stock_status === 'IN_STOCK' ? false : true,
-      description: '', // Add the logic to extract description if needed
+      description: '',
       lowestPrice: Number(dataQuery.nextData.props.pageProps.pageData.content.pichau_prices.avista) || Number (dataQuery.nextData.props.pageProps.pageData.content.pichau_prices.final_price),
       highestPrice:  Number (dataQuery.nextData.props.pageProps.pageData.content.pichau_prices.final_price) || Number(dataQuery.nextData.props.pageProps.pageData.content.pichau_prices.avista),
       averagePrice: Number(dataQuery.nextData.props.pageProps.pageData.content.pichau_prices.avista) || Number (dataQuery.nextData.props.pageProps.pageData.content.pichau_prices.final_price),
@@ -299,22 +282,4 @@ export async function scrapePichauProduct (url:string) {
   } finally {
     await browser.close();
   } 
-
-/* 
-  try {
-    const response = await fetch(url).then(res => res.text())
-    console.log(response);
-    
-    const $ = load(response);
-    console.log("DINHEIRO");
-    
-    console.log($);
-    
-    const nextData = JSON.parse($('#__NEXT_DATA__').html()!) as NextData ;
-    //const priceValue = $('meta[property="twitter:data1"]').attr('content');
-    //console.log(priceValue);
-    console.log(nextData);
-  } catch (error) {
-    console.error('Erro durante o crawling: PICHAU:', error);
-  } */
 }
