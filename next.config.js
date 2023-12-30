@@ -3,6 +3,8 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: [
       'mongoose',
+      'puppeteer',
+      'puppeteer-core',
       'puppeteer-extra', 
       'puppeteer-extra-plugin-stealth',
     ], 
