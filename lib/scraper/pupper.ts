@@ -1,16 +1,15 @@
 "use server"
 
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import puppeteer from 'puppeteer'
 
-puppeteer.use(StealthPlugin());
+const { BLESS_TOKEN } = process.env
+
+const runBrowserles = async () => await puppeteer.connect({
+    browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
+  })
 
 export async function getPagePupper(url: string) {
-    const browser = await puppeteer.launch({
-        headless: 'new',
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-
+    const browser = await runBrowserles();
     const page = await browser.newPage();
 
     await page.goto(url);
@@ -21,5 +20,4 @@ export async function getPagePupper(url: string) {
 
     return content;
 }
-
 

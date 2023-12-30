@@ -34,7 +34,7 @@ export async function scrapeAndStoreProduct(productUrl: string, source:Source) {
         throw new Error('Invalid source');
     }
 
-   /*  getPagePupper(productUrl)
+    getPagePupper(productUrl)
     .then(content => {
       console.log("CONTENT:");
       console.log(content);
@@ -44,7 +44,7 @@ export async function scrapeAndStoreProduct(productUrl: string, source:Source) {
       console.log("ERRO:");
       console.log(err);
     });
- */
+ 
     if (!scrapedProduct) {
       console.log('Can not get data from this site!');
       return;
