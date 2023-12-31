@@ -2,12 +2,11 @@
 
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { extractDescription } from '../utils';
-import { NextDataKabum, NextDataPichau, ProductType } from '@/types';
-
-import  { Browser, executablePath } from 'puppeteer';
 import puppeteer from 'puppeteer-extra';
+import { extractDescription } from '../utils';
+import  { Browser, executablePath } from 'puppeteer';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import { NextDataKabum, NextDataPichau, ProductType } from '@/types';
 
 puppeteer.use(StealthPlugin());
 

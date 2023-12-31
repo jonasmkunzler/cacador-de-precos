@@ -1,8 +1,10 @@
-# Caçador de Preços
+# Price Hunter (Caçador de Preços)
 
-This is an application made with NextJS.
+Hello everyone, I made this project to track the price trends of some products I wanted to purchase and to be notified when would be the best time to buy them. This helped me gain a better understanding of how web scraping works with Cheerio and web crawling with Puppeteer.
 
-![Principal Image]()
+For now, this project only runs on localhost as it faces some issues regarding security policies to execute the crawling operation on serverless platforms.
+
+![Principal Image](public/assets/images/main-page.png)
 
 ## Technology
 
@@ -11,14 +13,13 @@ Here are the technologies used in this project.
 - React JS
 - React Icons
 - Puppeteer
+- Cheerio
 - Tailwind CSS
 - NextJS
 - Typescript
 - Nodemailer
-- Cheerio
 - Axios
 - Mongoose
-
 
 ## Services Used
 
@@ -89,5 +90,4 @@ Please note that the project requires the 'm.media-amazon.com', 'media.pichau.co
 
 - **Jonas Kunzler**
 
-Follow these steps to install and run the project:
-
+If this project helped you, please leave a star on GitHub.
