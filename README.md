@@ -1,9 +1,6 @@
 # Caçador de Preços
 
-This is an application made with NextJS + Vercel.
-
-Link to portfolio:
-https://cacador-de-precos.vercel.app/
+This is an application made with NextJS.
 
 ![Principal Image]()
 
@@ -13,16 +10,19 @@ Here are the technologies used in this project.
 
 - React JS
 - React Icons
+- Puppeteer
 - Tailwind CSS
 - NextJS
+- Typescript
 - Nodemailer
-- Pupperteer
 - Cheerio
+- Axios
+- Mongoose
+
 
 ## Services Used
 
 - Github
-- Vercel
 
 ## Links
 
@@ -31,25 +31,14 @@ Here are the technologies used in this project.
     jonasmkunzler@gmail.com directly instead of using issue tracker. We value your effort
     to improve the security and privacy of this project!
 
-## Versioning
-
-1.0.0.0
-
-## Authors
-
-- **Jonas Mario Kunzler**
-
-Please follow github and join us!
-Thanks to visiting me and good coding!
-
-Follow these steps to install and run the project:
+## Clone this project
 
 1. **Clone the repository**
 
    Open your terminal and run the following command to clone the repository:
 
    ```bash
-   git clone https://github.com/jonasmkunzler/cacadordeprecos.git
+   git clone https://github.com/jonasmkunzler/cacador-de-precos.git
    ```
 
 2. **Navigate to the project directory**
@@ -80,6 +69,8 @@ Follow these steps to install and run the project:
 
    ```bash
    MONGODB_URI=your_mongodb_uri
+   EMAIL_USERNAME=your_email_username
+   EMAIL_PASSWORD=your_email_password
    ```
 
 7. **Start the server**
@@ -87,9 +78,16 @@ Follow these steps to install and run the project:
    Run the following command to start the server:
 
    ```bash
-   npm run start
+   npm run dev
    ```
 
 Now, you should be able to access the project at `http://localhost:3000`.
 
-Please note that the project requires the "m.media-amazon.com" domain to be accessible for image handling. If you are unable to access this domain, you may encounter issues with image loading.
+Please note that the project requires the 'm.media-amazon.com', 'media.pichau.com.br', '*.kabum.com.br' and '*.terabyteshop.*' domain to be accessible for image handling. If you are unable to access this domain, you may encounter issues with image loading.
+
+## Authors
+
+- **Jonas Kunzler**
+
+Follow these steps to install and run the project:
+
