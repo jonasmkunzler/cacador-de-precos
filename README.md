@@ -97,6 +97,8 @@ Here are the technologies used in this project.
 
 8. **Configure the localhost server**
 
+   I use Ubuntu 23.10 for this configuration
+
    Oper your terminal and run the following command:
 
    ```bash
@@ -106,7 +108,7 @@ Here are the technologies used in this project.
    And add this two lines one your crontab to run the project every 30 minutes and the http request every 6 hours:
 
    ```bash
-   30 * * * * cd /home/jonas-ubu/Documentos/GitHub/cacador-de-precos && npm start
+   30 * * * * cd /home/your-user-name/Documentos/GitHub/cacador-de-precos && npm start
    0 */6 * * * curl http://localhost:4000/api/cron
    ```
 
