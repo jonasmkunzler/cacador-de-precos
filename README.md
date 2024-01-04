@@ -99,6 +99,12 @@ Here are the technologies used in this project.
 
    I use Ubuntu 23.10 for this configuration
 
+   Run the command below in your project directory to create a build version of the project:
+
+   ```bash
+   npm run build
+   ```
+
    Oper your terminal and run the following command:
 
    ```bash
