@@ -114,8 +114,8 @@ Here are the technologies used in this project.
 
 Please note that the project requires the 'm.media-amazon.com', 'media.pichau.com.br', 'kabum.com.br' and 'terabyteshop.\*' domain to be accessible for image handling. If you are unable to access this domain, you may encounter issues with image loading.
 
-## Authors
+## Author
 
-- **Jonas Kunzler**
+**Jonas Kunzler**
 
 If this project helped you, please leave a star on GitHub.
