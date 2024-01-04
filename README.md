@@ -4,7 +4,17 @@ Hello everyone, I made this project to track the price trends of some products I
 
 For now, this project only runs on localhost as it faces some issues regarding security policies to execute the crawling operation on serverless platforms.
 
+Check the online version here:
+https://cacador-de-precos.vercel.app/
+Important: The function to add a new product will not work due to Vercel's security policies regarding the use of Puppeteer. In topic 8 below, I explain how to perform this process automatically on your computer.
+
+## Main Page
+
 ![Principal Image](public/assets/images/main-page.png)
+
+## Product Page
+
+![Product Image](public/assets/images/product-page.png)
 
 ## Technology
 
@@ -24,6 +34,7 @@ Here are the technologies used in this project.
 ## Services Used
 
 - Github
+- Linux Crontab Jobs
 
 ## Links
 
@@ -82,9 +93,24 @@ Here are the technologies used in this project.
    npm run dev
    ```
 
-Now, you should be able to access the project at `http://localhost:3000`.
+   Now, you should be able to access the project at `http://localhost:4000`.
 
-Please note that the project requires the 'm.media-amazon.com', 'media.pichau.com.br', '*.kabum.com.br' and '*.terabyteshop.*' domain to be accessible for image handling. If you are unable to access this domain, you may encounter issues with image loading.
+8. **Configure the localhost server**
+
+   Oper your terminal and run the following command:
+
+   ```bash
+   sudo crontab -e
+   ```
+
+   And add this two lines one your crontab to run the project every 30 minutes and the http request every 6 hours:
+
+   ```bash
+   30 * * * * cd /home/jonas-ubu/Documentos/GitHub/cacador-de-precos && npm start
+   0 */6 * * * curl http://localhost:4000/api/cron
+   ```
+
+Please note that the project requires the 'm.media-amazon.com', 'media.pichau.com.br', 'kabum.com.br' and 'terabyteshop.\*' domain to be accessible for image handling. If you are unable to access this domain, you may encounter issues with image loading.
 
 ## Authors
 
