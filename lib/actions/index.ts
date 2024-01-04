@@ -7,7 +7,6 @@ import { scrapeAmazonProduct, scrapeKabumProduct, scrapePichauProduct, scrapeTer
 import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
 import { ProductType, Source, User } from "@/types";
 import { generateEmailBody, sendEmail } from "../nodemailer";
-import { getPagePupper } from "../scraper/pupper";
 
 export async function scrapeAndStoreProduct(productUrl: string, source:Source) {
   if(!productUrl || !source) return;
@@ -34,17 +33,6 @@ export async function scrapeAndStoreProduct(productUrl: string, source:Source) {
         throw new Error('Invalid source');
     }
 
-   /*  getPagePupper(productUrl)
-    .then(content => {
-      console.log("CONTENT:");
-      console.log(content);
-      
-    })
-    .catch(err => {
-      console.log("ERRO:");
-      console.log(err);
-    }); */
- 
     if (!scrapedProduct) {
       console.log('Can not get data from this site!');
       return;
