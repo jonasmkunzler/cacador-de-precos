@@ -56,7 +56,7 @@ Here are the technologies used in this project.
 2. **Navigate to the project directory**
 
    ```bash
-   cd cacadordeprecos
+   cd cacador-de-precos
    ```
 
 3. **Install Node.js**
