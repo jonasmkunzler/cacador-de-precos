@@ -16,7 +16,7 @@ Important: The function to add a new product will not work due to Vercel's secur
 
 ![Product Image](public/assets/images/product-page.png)
 
-## Technology
+## Technologies
 
 Here are the technologies used in this project.
 
